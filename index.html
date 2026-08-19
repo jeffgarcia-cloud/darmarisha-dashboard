@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marisha — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg:        #080808;
+  --bg1:       #0F0F0F;
+  --bg2:       #141414;
+  --bg3:       #1A1A1A;
+  --border:    rgba(255,255,255,0.06);
+  --border2:   rgba(255,255,255,0.11);
+  --green:     #22C55E;
+  --green-dim: rgba(34,197,94,0.12);
+  --green-low: rgba(34,197,94,0.06);
+  --white:     #FFFFFF;
+  --t1:        #F5F5F5;
+  --t2:        #888888;
+  --t3:        #444444;
+  --red:       #EF4444;
+  --yellow:    #EAB308;
+  --sidebar-w: 220px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:2px}
+
+.app{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);position:fixed;top:0;left:0;bottom:0;
+  background:var(--bg1);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:200
+}
+
+.sb-top{padding:22px 18px 20px;border-bottom:1px solid var(--border)}
+.sb-ch-name{font-size:15px;font-weight:900;color:var(--white);letter-spacing:-.4px;line-height:1.1}
+.sb-ch-handle{font-size:11px;color:var(--t3);margin-top:3px;font-weight:500}
+.sb-followers{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid rgba(34,197,94,0.25);border-radius:6px;padding:5px 10px}
+.sb-followers-num{font-size:13px;font-weight:800;color:var(--green)}
+.sb-followers-lbl{font-size:10px;color:rgba(34,197,94,0.7);font-weight:600}
+
+.sb-nav{padding:16px 10px;flex:1}
+.sb-section-lbl{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:14px}
+.sb-section-lbl:first-child{margin-top:0}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:8px;cursor:pointer;
+  font-size:12.5px;font-weight:500;color:var(--t2);
+  margin-bottom:2px;transition:all .15s;user-select:none
+}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--t1)}
+.nav-item.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.nav-item svg{flex-shrink:0}
+
+.sb-bottom{padding:16px 18px;border-top:1px solid var(--border)}
+.sb-live{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t3);margin-bottom:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sb-stat{text-align:center;padding:8px;background:var(--bg2);border-radius:7px;border:1px solid var(--border)}
+.sb-stat-val{font-size:14px;font-weight:800;color:var(--t1)}
+.sb-stat-lbl{font-size:9px;color:var(--t3);margin-top:1px}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1}
+
+.topbar{
+  height:54px;background:rgba(8,8,8,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;position:sticky;top:0;z-index:100
+}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-title{font-size:15px;font-weight:800;color:var(--t1)}
+.tb-badge{font-size:10px;font-weight:700;color:var(--green);background:var(--green-dim);border:1px solid rgba(34,197,94,.2);padding:3px 8px;border-radius:5px}
+.tb-right{font-size:11px;color:var(--t3)}
+
+/* ── VIEWS ── */
+.view{display:none;padding:26px 28px 60px;animation:fadein .2s ease}
+.view.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION HEADER ── */
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sh-lbl{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);white-space:nowrap}
+.sh-line{flex:1;height:1px;background:var(--border)}
+
+/* ── GRIDS ── */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.g21{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:14px}
+
+/* ── BASE CARD ── */
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+.card-title{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.card-sub{font-size:10px;color:var(--t3);margin-bottom:14px}
+.card-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+
+/* ── STAT CARDS (Overview KPIs) ── */
+.stat-card{
+  background:var(--bg1);border:1px solid var(--border);border-radius:12px;
+  padding:18px;position:relative;overflow:hidden;transition:border-color .15s
+}
+.stat-card:hover{border-color:var(--border2)}
+.stat-card.featured{border-color:rgba(34,197,94,0.25);background:linear-gradient(145deg,var(--bg1),#0D160F)}
+.stat-label{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.4px;margin-bottom:10px;text-transform:uppercase}
+.stat-value{font-size:30px;font-weight:900;letter-spacing:-1.5px;color:var(--white);line-height:1;margin-bottom:4px}
+.stat-value.green{color:var(--green)}
+.stat-sub{font-size:10px;color:var(--t3)}
+.stat-delta{position:absolute;top:18px;right:16px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.delta-up{background:rgba(34,197,94,.12);color:var(--green)}
+.delta-down{background:rgba(239,68,68,.1);color:var(--red)}
+.delta-mid{background:rgba(234,179,8,.1);color:var(--yellow)}
+.stat-bar{height:2px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden;margin-top:10px}
+.stat-bar-fill{height:100%;border-radius:1px}
+
+/* ── PLATFORM ROWS ── */
+.plat-list{display:flex;flex-direction:column;gap:8px}
+.plat-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;background:var(--bg2);
+  border-radius:9px;border:1px solid var(--border);transition:border-color .15s
+}
+.plat-row:hover{border-color:var(--border2)}
+.plat-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.plat-name{font-size:12px;font-weight:700;color:var(--t1)}
+.plat-handle{font-size:10px;color:var(--t3)}
+.plat-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.plat-num{text-align:right}
+.plat-num-val{font-size:14px;font-weight:800;color:var(--t1)}
+.plat-num-lbl{font-size:9px;color:var(--t3)}
+.pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.pill-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.pill-red{background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.18)}
+.pill-yellow{background:rgba(234,179,8,.08);color:var(--yellow);border:1px solid rgba(234,179,8,.18)}
+.pill-gray{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--border)}
+
+/* ── CONTENT CALENDAR ── */
+.cal-section-title{font-size:9px;font-weight:700;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.cal-section-title::after{content:'';flex:1;height:1px;background:rgba(34,197,94,0.2)}
+.cal-body{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:20px}
+.cal-controls{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.cal-ctrl-left .cal-title{font-size:15px;font-weight:800;color:var(--white)}
+.cal-ctrl-left .cal-sub{font-size:10px;color:var(--t3);margin-top:4px}
+.cal-ctrl-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cal-filter{font-size:10px;font-weight:600;padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--t2);cursor:pointer;transition:all .15s}
+.cal-filter:hover{border-color:rgba(34,197,94,.4);color:var(--green)}
+.cal-filter.active{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);color:var(--green)}
+.cal-add{font-size:10px;font-weight:700;padding:5px 13px;border-radius:7px;border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.12);color:var(--green);cursor:pointer;transition:all .15s;margin-left:4px}
+.cal-add:hover{background:rgba(34,197,94,.22)}
+.cal-week-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-week-lbl{font-size:11px;color:var(--t3);font-weight:500}
+.cal-week-nav{display:flex;gap:5px}
+.cal-nav-btn{width:26px;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--border);color:var(--t2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{border-color:var(--border2);color:var(--t1)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal-col{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:10px;padding:10px 7px;display:flex;flex-direction:column}
+.cal-col.today{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.025)}
+.cal-day-hd{font-size:8.5px;font-weight:700;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.cal-day-hd .day-num{display:block;font-size:16px;font-weight:800;color:var(--t2);letter-spacing:normal;margin-top:2px}
+.cal-day-hd.today{color:var(--green)}
+.cal-day-hd.today .day-num{color:var(--green)}
+.cal-events{display:flex;flex-direction:column;gap:5px;padding-top:2px;flex:1}
+.cal-event{padding:7px 6px;border-radius:7px;cursor:pointer;font-size:10px;font-weight:700;line-height:1.3;transition:all .13s;border:1px solid transparent}
+.cal-event:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.ev-reel{background:rgba(225,48,108,.1);color:#E1306C;border-color:rgba(225,48,108,.2)}
+.ev-carousel{background:rgba(56,189,248,.1);color:#38BDF8;border-color:rgba(56,189,248,.2)}
+.ev-label{font-size:9px;font-weight:500;color:inherit;opacity:.7;margin-top:2px;display:block}
+
+/* ── TO-DO ── */
+.todo-add-row{display:flex;gap:8px;margin-bottom:18px}
+.todo-input{
+  flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:9px;
+  padding:11px 14px;font-size:13px;color:var(--t1);font-family:'Inter',sans-serif;
+  transition:border-color .15s;outline:none
+}
+.todo-input:focus{border-color:rgba(34,197,94,.4)}
+.todo-input::placeholder{color:var(--t3)}
+.todo-add-btn{
+  padding:11px 18px;background:var(--green);border:none;border-radius:9px;
+  font-size:12px;font-weight:700;color:#000;cursor:pointer;transition:all .15s;
+  white-space:nowrap;font-family:'Inter',sans-serif
+}
+.todo-add-btn:hover{background:#1DAF52}
+
+.todo-section-lbl{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.todo-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.todo-item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:13px 14px;background:var(--bg1);border:1px solid var(--border);
+  border-radius:9px;transition:border-color .15s;cursor:default
+}
+.todo-item:hover{border-color:var(--border2)}
+.todo-item.done .todo-text{color:var(--t3);text-decoration:line-through}
+.todo-item.done .todo-cat{opacity:.4}
+.todo-check{
+  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--t3);
+  flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .15s
+}
+.todo-check.checked{background:var(--green);border-color:var(--green)}
+.todo-text{font-size:12.5px;font-weight:500;color:var(--t1);flex:1;line-height:1.4}
+.todo-meta{display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0}
+.todo-cat{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px}
+.cat-content{background:rgba(105,201,208,.1);color:#69C9D0}
+.cat-ops{background:rgba(34,197,94,.1);color:var(--green)}
+.cat-business{background:rgba(234,179,8,.1);color:var(--yellow)}
+.cat-personal{background:rgba(255,255,255,.05);color:var(--t3)}
+.todo-del{width:22px;height:22px;border-radius:5px;background:transparent;border:none;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;font-family:'Inter',sans-serif}
+.todo-del:hover{background:rgba(239,68,68,.1);color:var(--red)}
+
+/* ── ANALYTICS ── */
+.chart-wrap{position:relative;height:220px}
+.chart-wrap-tall{position:relative;height:260px}
+.analytics-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.akpi{background:var(--bg1);border:1px solid var(--border);border-radius:11px;padding:16px;text-align:center}
+.akpi-val{font-size:22px;font-weight:900;color:var(--t1);letter-spacing:-.8px}
+.akpi-lbl{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:24px;width:100%;max-width:420px;animation:fadein .18s ease}
+.modal-title{font-size:15px;font-weight:800;color:var(--t1);margin-bottom:16px}
+.modal-field{margin-bottom:12px}
+.modal-lbl{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px}
+.modal-in{width:100%;background:var(--bg1);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--t1);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.modal-in:focus{border-color:rgba(34,197,94,.4)}
+.modal-in textarea{resize:vertical;min-height:70px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.btn-ghost{padding:8px 15px;border-radius:7px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-ghost:hover{color:var(--t1);border-color:var(--border2)}
+.btn-green{padding:8px 15px;border-radius:7px;background:var(--green);border:none;color:#000;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-green:hover{background:#1DAF52}
+
+/* ── PROGRESS ── */
+.prog{margin-bottom:12px}
+.prog-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
+.prog-name{font-weight:600;color:var(--t1)}
+.prog-val{color:var(--t2)}
+.prog-bg{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+
+/* ── CREDIT BANNER ── */
+.credit{
+  padding:10px 28px;
+  background:rgba(34,197,94,.04);border-bottom:1px solid rgba(34,197,94,.1);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap
+}
+.credit-avatar{width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#000;flex-shrink:0}
+.credit-name{font-size:11px;font-weight:700;color:var(--t1)}
+.credit-txt{font-size:10px;color:var(--t3);flex:1;min-width:200px}
+.credit-tag{font-size:9px;padding:3px 9px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-top">
+    <div class="sb-ch-name">Marisha</div>
+    <div class="sb-ch-handle">@darmarisha</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+      <div class="sb-followers" style="background:rgba(225,48,108,0.1);border-color:rgba(225,48,108,0.25)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#E1306C" stroke="none"/></svg>
+        <span class="sb-followers-num" style="color:#E1306C">21.5K</span>
+        <span class="sb-followers-lbl" style="color:rgba(225,48,108,0.7)">Instagram</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-section-lbl">Navigation</div>
+    <div class="nav-item active" onclick="showView('overview',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </div>
+    <div class="nav-item" onclick="showView('calendar',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Calendar
+    </div>
+    <div class="nav-item" onclick="showView('log',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Content Log
+    </div>
+    <div class="nav-item" onclick="showView('todo',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      To-Do
+    </div>
+  </div>
+
+  <div class="sb-bottom">
+    <div class="sb-live"><div class="dot"></div>Live stats</div>
+    <div class="sb-stats">
+      <div class="sb-stat">
+        <div class="sb-stat-val" style="color:#E1306C">21.5K</div>
+        <div class="sb-stat-lbl">Instagram</div>
+      </div>
+      <div class="sb-stat">
+        <div class="sb-stat-val">2,190</div>
+        <div class="sb-stat-lbl">Following</div>
+      </div>
+      <div class="sb-stat">
+        <div class="sb-stat-val">4</div>
+        <div class="sb-stat-lbl">Content pillars</div>
+      </div>
+      <div class="sb-stat">
+        <div class="sb-stat-val" style="color:var(--green)">2</div>
+        <div class="sb-stat-lbl">Brand partners</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title" id="topbar-title">Overview</div>
+      <div class="tb-badge" id="topbar-badge">Racquet Sport Creator · Instagram</div>
+    </div>
+    <div class="tb-right">marina.darzyan@gmail.com · Updated August 2026</div>
+  </div>
+
+  <!-- Credit strip -->
+  <div class="credit">
+    <div class="credit-avatar">JG</div>
+    <div class="credit-name">Built by Jefferson Garcia</div>
+    <div class="credit-tag" id="credit-tag">OVERVIEW</div>
+  </div>
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <div class="view active" id="view-overview">
+
+
+    <!-- KPI stat cards -->
+    <div class="g2">
+      <div class="stat-card featured">
+        <div class="stat-delta delta-up">Primary</div>
+        <div class="stat-label">Instagram Followers</div>
+        <div class="stat-value green">21.5K</div>
+        <div class="stat-sub">@darmarisha · 2,190 following · LA</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-delta delta-up">Niche</div>
+        <div class="stat-label">Positioning</div>
+        <div class="stat-value" style="font-size:22px">Racquet Sports</div>
+        <div class="stat-sub">Crossover athlete angle — few LA creators own this lane</div>
+      </div>
+    </div>
+
+    <!-- Platforms + Pillars -->
+    <div class="g21">
+      <div class="card">
+        <div class="card-hd"><div><div class="card-title">Platforms</div><div class="card-sub">Main channels · current state</div></div></div>
+        <div class="plat-list">
+
+          <!-- Instagram -->
+          <div class="plat-row">
+            <div class="plat-icon" style="background:linear-gradient(135deg,#F09433,#DC2743,#BC1888)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+            </div>
+            <div style="flex:1">
+              <div class="plat-name">Instagram</div>
+              <div class="plat-handle">@darmarisha · racquet tips, outfits, out &amp; about, lifestyle</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-num"><div class="plat-num-val">21.5K</div><div class="plat-num-lbl">followers</div></div>
+              <div class="plat-num"><div class="plat-num-val">2,190</div><div class="plat-num-lbl">following</div></div>
+              <span class="pill pill-green">Primary</span>
+            </div>
+          </div>
+
+          <!-- TikTok — unconfirmed -->
+          <div class="plat-row" style="opacity:.85">
+            <div class="plat-icon" style="background:#111;border:1px dashed rgba(255,255,255,.18)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--t2)"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.77.39 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-6.13 6.33 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+            </div>
+            <div style="flex:1">
+              <div class="plat-name">TikTok<span style="color:var(--t3);font-weight:600"> — worth exploring?</span></div>
+              <div class="plat-handle">Not part of the current plan — open question for her</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-num"><div class="plat-num-val" style="color:var(--t3)">?</div><div class="plat-num-lbl">followers</div></div>
+              <span class="pill pill-gray">Undecided</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Content Mix -->
+      <div class="card">
+        <div class="card-hd"><div><div class="card-title">Content Pillars</div><div class="card-sub">What she posts</div></div></div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:3px">Racquet Sports Tips</div>
+            <div style="font-size:10px;color:var(--t2)">Padel &amp; tennis technique breakdowns, drills, quick tips</div>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+            <div style="font-size:11px;font-weight:700;color:#E1306C;margin-bottom:3px">Outfits</div>
+            <div style="font-size:10px;color:var(--t2)">On-court fits and gear — high save/share format</div>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+            <div style="font-size:11px;font-weight:700;color:#EAB308;margin-bottom:3px">Out &amp; About</div>
+            <div style="font-size:10px;color:var(--t2)">Interviews, tournaments, brand events, community meetups</div>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg2);border:1px solid rgba(34,197,94,.3);border-radius:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+              <div style="font-size:11px;font-weight:700;color:#A78BFA">Lifestyle</div>
+              <span style="font-size:8px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)">Most frequent</span>
+            </div>
+            <div style="font-size:10px;color:var(--t2)">Day-in-the-life, workouts, off-court moments — the daily anchor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Activity Tracker -->
+    <div class="sh"><div class="sh-lbl">Weekly activity tracker</div><div class="sh-line"></div><div id="tracker-week-lbl" style="font-size:10px;color:var(--t3);white-space:nowrap;margin-left:8px"></div><div style="margin-left:10px;font-size:9px;padding:3px 9px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap">Resets every Sunday</div></div>
+    <div class="card" style="padding:16px 18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div><div class="card-title">Tasks This Week</div><div class="card-sub">Add or remove tasks anytime — checkmarks reset automatically each Sunday</div></div>
+        <div id="tracker-progress" style="font-size:22px;font-weight:900;color:var(--green);letter-spacing:-1px"></div>
+      </div>
+      <div style="height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-bottom:18px">
+        <div id="tracker-bar" style="height:100%;background:var(--green);border-radius:2px;transition:width .5s ease"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input class="todo-input" id="tracker-input" type="text" placeholder="Add a task to this week's tracker..." onkeydown="if(event.key==='Enter')addTrackerTask()">
+        <button class="todo-add-btn" onclick="addTrackerTask()">Add</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="tracker-list"></div>
+    </div>
+
+  </div><!-- /overview -->
+
+  <!-- ═══ CALENDAR ═══ -->
+  <div class="view" id="view-calendar">
+
+    <div class="cal-section-title">Content Calendar</div>
+
+    <div class="cal-body">
+      <div class="cal-controls">
+        <div class="cal-ctrl-left">
+          <div class="cal-title">Weekly Schedule — Click any post to edit</div>
+          <div class="cal-sub">4 Reels + 3 Carousels per week</div>
+        </div>
+        <div class="cal-ctrl-right">
+          <button class="cal-filter active" onclick="setFilter('all',this)">All</button>
+          <button class="cal-filter" onclick="setFilter('reel',this)">Reel</button>
+          <button class="cal-filter" onclick="setFilter('carousel',this)">Carousel</button>
+          <button class="cal-add" onclick="openAddPost()">+ Add Post</button>
+        </div>
+      </div>
+
+      <div class="cal-week-bar">
+        <div class="cal-week-lbl" id="cal-week-label">Week of August 18, 2026</div>
+        <div class="cal-week-nav">
+          <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8249;</button>
+          <button class="cal-nav-btn" onclick="changeWeek(1)">&#8250;</button>
+        </div>
+      </div>
+
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <!-- Schedule info cards -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px">
+      <div style="background:rgba(225,48,108,.05);border:1px solid rgba(225,48,108,.15);border-radius:10px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#E1306C;text-transform:uppercase;margin-bottom:6px">Reel Days</div>
+        <div style="font-size:13px;font-weight:800;color:var(--t1)">Mon · Wed · Fri · Sun</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px">4 per week — technique tips and lifestyle moments</div>
+      </div>
+      <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:10px;padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#38BDF8;text-transform:uppercase;margin-bottom:6px">Carousel Days</div>
+        <div style="font-size:13px;font-weight:800;color:var(--t1)">Tue · Thu · Sat</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px">3 per week — outfits and out &amp; about coverage</div>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div class="overlay" id="cal-overlay" onclick="closeCalModal(event)">
+      <div class="modal">
+        <div class="modal-title" id="cal-modal-title">Post Details</div>
+        <div class="modal-field">
+          <div class="modal-lbl">Topic / Brief</div>
+          <textarea class="modal-in" id="cal-modal-brief" rows="3" placeholder="Describe this post..."></textarea>
+        </div>
+        <div class="modal-field">
+          <div class="modal-lbl">Platform</div>
+          <input class="modal-in" id="cal-modal-platform" type="text">
+        </div>
+        <div class="modal-field">
+          <div class="modal-lbl">Hook idea</div>
+          <input class="modal-in" id="cal-modal-hook" type="text" placeholder="Opening line or angle...">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="closeCalOverlay()">Cancel</button>
+          <button class="btn-green" onclick="saveCalModal()">Save</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /calendar -->
+
+  <!-- ═══ CONTENT LOG ═══ -->
+  <div class="view" id="view-log">
+
+    <div style="margin-bottom:14px;padding:12px 16px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15);border-radius:9px;font-size:10px;color:var(--t2);line-height:1.6">
+      Internal tracking — log every Reel and Carousel after you post it, with the numbers from Instagram insights. No projections, just what actually happened. The charts below update as you add entries.
+    </div>
+
+    <div class="analytics-kpi-row">
+      <div class="akpi">
+        <div class="akpi-val" id="log-total-posts" style="color:var(--t1)">0</div>
+        <div class="akpi-lbl">Posts logged</div>
+      </div>
+      <div class="akpi">
+        <div class="akpi-val" id="log-reel-count" style="color:#E1306C">0</div>
+        <div class="akpi-lbl">Reels</div>
+      </div>
+      <div class="akpi">
+        <div class="akpi-val" id="log-carousel-count" style="color:#38BDF8">0</div>
+        <div class="akpi-lbl">Carousels</div>
+      </div>
+      <div class="akpi">
+        <div class="akpi-val" id="log-total-engagement" style="color:var(--green)">0</div>
+        <div class="akpi-lbl">Total engagement</div>
+      </div>
+    </div>
+
+    <!-- Add entry form -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd"><div><div class="card-title">Log a Post</div><div class="card-sub">Add it right after you post — takes 15 seconds</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div>
+          <div class="modal-lbl">Type</div>
+          <select class="modal-in" id="log-type">
+            <option value="Reel">Reel</option>
+            <option value="Carousel">Carousel</option>
+          </select>
+        </div>
+        <div>
+          <div class="modal-lbl">Likes</div>
+          <input class="modal-in" id="log-likes" type="number" min="0" placeholder="0">
+        </div>
+        <div>
+          <div class="modal-lbl">Comments</div>
+          <input class="modal-in" id="log-comments" type="number" min="0" placeholder="0">
+        </div>
+        <div>
+          <div class="modal-lbl">Saves</div>
+          <input class="modal-in" id="log-saves" type="number" min="0" placeholder="0">
+        </div>
+        <div>
+          <div class="modal-lbl">Note (optional)</div>
+          <input class="modal-in" id="log-note" type="text" placeholder="e.g. backhand tip">
+        </div>
+        <button class="btn-green" style="height:34px" onclick="addLogEntry()">Add</button>
+      </div>
+    </div>
+
+    <div class="g2">
+      <!-- Reels vs Carousels -->
+      <div class="card">
+        <div class="card-hd">
+          <div><div class="card-title">Reels vs Carousels</div><div class="card-sub">Posts logged, by format</div></div>
+        </div>
+        <div class="chart-wrap"><canvas id="formatChart"></canvas></div>
+      </div>
+
+      <!-- Engagement per post -->
+      <div class="card">
+        <div class="card-hd">
+          <div><div class="card-title">Engagement per Post</div><div class="card-sub">Likes + comments + saves, most recent first</div></div>
+        </div>
+        <div class="chart-wrap"><canvas id="engagementChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Log list -->
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Log</div><div class="card-sub">Every post tracked so far</div></div></div>
+      <div class="todo-list" id="log-list" style="margin-bottom:0"></div>
+      <div id="log-empty" style="font-size:11px;color:var(--t3);text-align:center;padding:20px 0">No posts logged yet — add one above.</div>
+    </div>
+
+  </div><!-- /log -->
+
+  <!-- ═══ TO-DO ═══ -->
+  <div class="view" id="view-todo">
+
+    <!-- Add task row -->
+    <div class="todo-add-row">
+      <input class="todo-input" id="todo-input" type="text" placeholder="Add a task... (press Enter or click Add)" onkeydown="if(event.key==='Enter')addTodo()">
+      <select class="todo-input" id="todo-cat-select" style="flex:0 0 130px;cursor:pointer">
+        <option value="content">Content</option>
+        <option value="ops">Ops</option>
+        <option value="business">Business</option>
+        <option value="personal">Personal</option>
+      </select>
+      <button class="todo-add-btn" onclick="addTodo()">Add Task</button>
+    </div>
+
+    <!-- Pending tasks -->
+    <div class="todo-section-lbl">Pending</div>
+    <div class="todo-list" id="todo-pending"></div>
+
+    <!-- Done tasks -->
+    <div class="todo-section-lbl" id="done-lbl" style="display:none">Completed</div>
+    <div class="todo-list" id="todo-done"></div>
+
+  </div><!-- /todo -->
+
+</main>
+</div>
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────
+function showView(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  const labels = { overview:'Overview', calendar:'Calendar', log:'Content Log', todo:'To-Do' };
+  document.getElementById('topbar-title').textContent = labels[id] || id;
+  document.getElementById('credit-tag').textContent = (labels[id] || id).toUpperCase();
+  window.scrollTo(0, 0);
+  if (id === 'log') setTimeout(initLogCharts, 60);
+  if (id === 'calendar')  renderCalendar();
+}
+
+// ── WEEKLY ACTIVITY TRACKER ──────────────────────────────
+const DEFAULT_TRACKER_TASKS = [
+  { id:'t1', label:'Post Reel', cat:'Instagram' },
+  { id:'t2', label:'Post Carousel', cat:'Instagram' },
+  { id:'t3', label:'Film padel/tennis session content', cat:'Production' },
+  { id:'t5', label:'Shoot outfit content', cat:'Production' },
+  { id:'t6', label:'Respond to brand DMs', cat:'Business' },
+  { id:'t7', label:'Engage with Padel Up / PPL posts', cat:'Ops' },
+  { id:'t9', label:'Pitch a new brand collab', cat:'Business' },
+  { id:'t10', label:'Weekly analytics review', cat:'Analytics' },
+];
+
+let trackerTasks = JSON.parse(localStorage.getItem('dm-tracker-tasks') || 'null') || DEFAULT_TRACKER_TASKS;
+let nextTrackerId = Math.max(...trackerTasks.map(t => parseInt(t.id.replace('t','')) || 0), 0) + 1;
+
+function saveTrackerTasks() {
+  localStorage.setItem('dm-tracker-tasks', JSON.stringify(trackerTasks));
+}
+
+function addTrackerTask() {
+  const input = document.getElementById('tracker-input');
+  const text = input.value.trim();
+  if (!text) return;
+  trackerTasks.push({ id: 't' + (nextTrackerId++), label: text, cat: 'Content' });
+  input.value = '';
+  saveTrackerTasks();
+  renderTracker();
+}
+
+function deleteTrackerTask(id) {
+  trackerTasks = trackerTasks.filter(t => t.id !== id);
+  saveTrackerTasks();
+  const state = loadTrackerState();
+  delete state[id];
+  saveTrackerState(state);
+  renderTracker();
+}
+
+const CAT_COLORS = {
+  Instagram: '#E1306C', Ops: '#A78BFA',
+  Production: '#EAB308', Content: '#22C55E', Business: '#FF5000', Analytics: '#F97316'
+};
+
+function getWeekKey() {
+  const now = new Date();
+  const monday = new Date(now);
+  const day = monday.getDay();
+  monday.setDate(monday.getDate() - (day === 0 ? 6 : day - 1));
+  return `tracker-${monday.getFullYear()}-${monday.getMonth()}-${monday.getDate()}`;
+}
+
+function loadTrackerState() {
+  const key = getWeekKey();
+  const saved = localStorage.getItem(key);
+  return saved ? JSON.parse(saved) : {};
+}
+
+function saveTrackerState(state) {
+  // Clear old keys
+  Object.keys(localStorage).filter(k => k.startsWith('tracker-') && k !== getWeekKey()).forEach(k => localStorage.removeItem(k));
+  localStorage.setItem(getWeekKey(), JSON.stringify(state));
+}
+
+function renderTracker() {
+  const list = document.getElementById('tracker-list');
+  const bar = document.getElementById('tracker-bar');
+  const prog = document.getElementById('tracker-progress');
+  const weekLbl = document.getElementById('tracker-week-lbl');
+  if (!list) return;
+
+  const state = loadTrackerState();
+  const done = trackerTasks.filter(t => state[t.id]).length;
+  const total = trackerTasks.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  if (bar) bar.style.width = pct + '%';
+  if (prog) prog.textContent = `${done}/${total}`;
+
+  // Week label
+  const now = new Date();
+  const mon = new Date(now);
+  const d = mon.getDay();
+  mon.setDate(mon.getDate() - (d === 0 ? 6 : d - 1));
+  const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+  const fmt = d2 => d2.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+  if (weekLbl) weekLbl.textContent = `${fmt(mon)} – ${fmt(sun)}`;
+
+  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  list.innerHTML = '';
+  trackerTasks.forEach(task => {
+    const checked = !!state[task.id];
+    const color = CAT_COLORS[task.cat] || '#888';
+    const el = document.createElement('div');
+    el.style.cssText = `display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;transition:border-color .15s`;
+    el.innerHTML = `
+      <div class="tracker-check" style="width:18px;height:18px;border-radius:5px;border:1.5px solid ${checked ? color : 'var(--t3)'};background:${checked ? color : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .15s">${checked ? checkSvg : ''}</div>
+      <div style="flex:1;font-size:11.5px;font-weight:${checked ? '500' : '600'};color:${checked ? 'var(--t3)' : 'var(--t1)'};${checked ? 'text-decoration:line-through' : ''};cursor:pointer">${task.label}</div>
+      <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:${color}18;color:${color};border:1px solid ${color}30">${task.cat}</span>
+      <button class="todo-del tracker-del" style="flex-shrink:0">&#215;</button>`;
+    const toggle = () => {
+      const s = loadTrackerState();
+      s[task.id] = !s[task.id];
+      saveTrackerState(s);
+      renderTracker();
+    };
+    el.querySelector('.tracker-check').onclick = toggle;
+    el.querySelector('div:nth-child(2)').onclick = toggle;
+    el.querySelector('.tracker-del').onclick = () => deleteTrackerTask(task.id);
+    list.appendChild(el);
+  });
+}
+
+window.addEventListener('load', () => {
+  renderCalendar();
+  renderTodos();
+  renderTracker();
+  renderLog();
+});
+
+function chartOpts(yCallback) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#666', font: { size: 11, family: 'Inter' }, boxWidth: 10 } }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#444', font: { size: 10 } },
+        grid: { color: 'rgba(255,255,255,0.03)' }
+      },
+      y: {
+        ticks: {
+          color: '#444', font: { size: 10 },
+          callback: yCallback || (v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v)
+        },
+        grid: { color: 'rgba(255,255,255,0.04)' }
+      }
+    }
+  };
+}
+
+// ── CONTENT LOG (manual internal tracking) ────────────────
+let logEntries = JSON.parse(localStorage.getItem('dm-content-log') || 'null') || [];
+let nextLogId = Math.max(...logEntries.map(e => e.id), 0) + 1;
+let formatChartInstance = null;
+let engagementChartInstance = null;
+
+function saveLogEntries() {
+  localStorage.setItem('dm-content-log', JSON.stringify(logEntries));
+}
+
+function addLogEntry() {
+  const type = document.getElementById('log-type').value;
+  const likes = parseInt(document.getElementById('log-likes').value) || 0;
+  const comments = parseInt(document.getElementById('log-comments').value) || 0;
+  const saves = parseInt(document.getElementById('log-saves').value) || 0;
+  const note = document.getElementById('log-note').value.trim();
+
+  logEntries.unshift({ id: nextLogId++, type, likes, comments, saves, note });
+  saveLogEntries();
+
+  document.getElementById('log-likes').value = '';
+  document.getElementById('log-comments').value = '';
+  document.getElementById('log-saves').value = '';
+  document.getElementById('log-note').value = '';
+
+  renderLog();
+}
+
+function deleteLogEntry(id) {
+  logEntries = logEntries.filter(e => e.id !== id);
+  saveLogEntries();
+  renderLog();
+}
+
+function renderLog() {
+  const kpiTotal = document.getElementById('log-total-posts');
+  if (!kpiTotal) return; // view not in DOM yet on first load, fine — reruns when tab opens
+
+  const reels = logEntries.filter(e => e.type === 'Reel');
+  const carousels = logEntries.filter(e => e.type === 'Carousel');
+  const totalEngagement = logEntries.reduce((s, e) => s + e.likes + e.comments + e.saves, 0);
+
+  kpiTotal.textContent = logEntries.length;
+  document.getElementById('log-reel-count').textContent = reels.length;
+  document.getElementById('log-carousel-count').textContent = carousels.length;
+  document.getElementById('log-total-engagement').textContent = totalEngagement.toLocaleString();
+
+  const list = document.getElementById('log-list');
+  const empty = document.getElementById('log-empty');
+  list.innerHTML = '';
+  empty.style.display = logEntries.length ? 'none' : 'block';
+
+  logEntries.forEach(e => {
+    const total = e.likes + e.comments + e.saves;
+    const color = e.type === 'Reel' ? '#E1306C' : '#38BDF8';
+    const el = document.createElement('div');
+    el.className = 'todo-item';
+    el.innerHTML = `
+      <span class="todo-cat" style="background:${color}18;color:${color};margin-top:1px">${e.type}</span>
+      <div class="todo-text">${e.note ? e.note : 'No note'} <span style="color:var(--t3)">— ${e.likes} likes · ${e.comments} comments · ${e.saves} saves (${total} total)</span></div>
+      <div class="todo-meta">
+        <button class="todo-del" onclick="deleteLogEntry(${e.id})">&#215;</button>
+      </div>`;
+    list.appendChild(el);
+  });
+
+  updateLogCharts();
+}
+
+function initLogCharts() {
+  if (formatChartInstance) { updateLogCharts(); return; }
+
+  formatChartInstance = new Chart(document.getElementById('formatChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Reels', 'Carousels'],
+      datasets: [{ data: [0, 0], backgroundColor: ['#E1306C', '#38BDF8'], borderWidth: 0 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { size: 11, family: 'Inter' }, boxWidth: 10 } } }
+    }
+  });
+
+  engagementChartInstance = new Chart(document.getElementById('engagementChart'), {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{ label: 'Engagement', data: [], backgroundColor: 'rgba(34,197,94,0.45)', borderRadius: 3 }]
+    },
+    options: { ...chartOpts(), plugins: { legend: { display: false } } }
+  });
+
+  updateLogCharts();
+}
+
+function updateLogCharts() {
+  if (!formatChartInstance || !engagementChartInstance) return;
+
+  const reels = logEntries.filter(e => e.type === 'Reel').length;
+  const carousels = logEntries.filter(e => e.type === 'Carousel').length;
+  formatChartInstance.data.datasets[0].data = [reels, carousels];
+  formatChartInstance.update();
+
+  const recent = logEntries.slice(0, 10).reverse();
+  engagementChartInstance.data.labels = recent.map(e => e.note ? e.note.slice(0, 12) : e.type);
+  engagementChartInstance.data.datasets[0].data = recent.map(e => e.likes + e.comments + e.saves);
+  engagementChartInstance.update();
+}
+
+// ── CALENDAR ─────────────────────────────────────────────
+let currentWeekStart = getMonday(new Date());
+
+function getMonday(d) {
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  date.setDate(diff);
+  date.setHours(0,0,0,0);
+  return date;
+}
+
+function changeWeek(dir) {
+  currentWeekStart.setDate(currentWeekStart.getDate() + dir * 7);
+  renderCalendar();
+}
+
+const CAL_DATA = {
+  0: [ // Mon — Reel
+    { type:'ev-reel', label:'Reel', sub:'Racquet sports tip or technique breakdown' }
+  ],
+  1: [ // Tue — Carousel
+    { type:'ev-carousel', label:'Carousel', sub:'Outfit lookbook / gear breakdown' }
+  ],
+  2: [ // Wed — Reel
+    { type:'ev-reel', label:'Reel', sub:'Lifestyle — day-in-the-life' }
+  ],
+  3: [ // Thu — Carousel
+    { type:'ev-carousel', label:'Carousel', sub:'Out & about — event or interview recap' }
+  ],
+  4: [ // Fri — Reel
+    { type:'ev-reel', label:'Reel', sub:'Racquet sports tip or training clip' }
+  ],
+  5: [ // Sat — Carousel
+    { type:'ev-carousel', label:'Carousel', sub:'Outfit or BTS from the weekend session' }
+  ],
+  6: [ // Sun — Reel
+    { type:'ev-reel', label:'Reel', sub:'Lifestyle — recap of the week' }
+  ]
+};
+
+const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const fmt = d => `${d.toLocaleString('en-US',{month:'short'})} ${d.getDate()}`;
+  const weekEnd = new Date(currentWeekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+  document.getElementById('cal-week-label').textContent =
+    `Week of ${fmt(currentWeekStart)} – ${fmt(weekEnd)}, ${currentWeekStart.getFullYear()}`;
+
+  grid.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(currentWeekStart); d.setDate(d.getDate() + i);
+    const isToday = d.getTime() === today.getTime();
+    const col = document.createElement('div');
+    col.className = 'cal-col';
+
+    const hd = document.createElement('div');
+    hd.className = 'cal-day-hd' + (isToday ? ' today' : '');
+    hd.innerHTML = `${DAY_NAMES[i]}<span class="day-num">${d.getDate()}</span>`;
+    col.appendChild(hd);
+
+    const events = document.createElement('div');
+    events.className = 'cal-events';
+    (CAL_DATA[i] || []).forEach(ev => {
+      const el = document.createElement('div');
+      el.className = `cal-event ${ev.type}`;
+      el.innerHTML = `${ev.label}<span class="ev-label">${ev.sub}</span>`;
+      el.onclick = () => openCalModal(`${DAY_NAMES[i]} — ${ev.label}`, ev.sub, `Instagram`);
+      events.appendChild(el);
+    });
+    col.appendChild(events);
+    grid.appendChild(col);
+  }
+}
+
+function openCalModal(title, brief, platform) {
+  document.getElementById('cal-modal-title').textContent = title;
+  document.getElementById('cal-modal-brief').value = brief;
+  document.getElementById('cal-modal-platform').value = platform;
+  document.getElementById('cal-overlay').classList.add('open');
+}
+function closeCalModal(e) {
+  if (e.target === document.getElementById('cal-overlay'))
+    document.getElementById('cal-overlay').classList.remove('open');
+}
+function closeCalOverlay() {
+  document.getElementById('cal-overlay').classList.remove('open');
+}
+function saveCalModal() {
+  closeCalOverlay();
+}
+function setFilter(type, btn) {
+  document.querySelectorAll('.cal-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const events = document.querySelectorAll('.cal-event');
+  events.forEach(ev => {
+    if (type === 'all') { ev.style.display = ''; return; }
+    ev.style.display = ev.classList.contains('ev-' + type) ? '' : 'none';
+  });
+}
+function openAddPost() {
+  openCalModal('New Post', '', 'Instagram');
+}
+
+// ── TO-DO ─────────────────────────────────────────────────
+const DEFAULT_TODOS = [
+  { id:1, text:'Check DMs and flag brand collab inquiries', cat:'ops', done:false },
+  { id:2, text:'Pull Instagram Reels analytics from last week', cat:'content', done:false },
+  { id:3, text:'Dump weekend padel footage and cut raw timeline', cat:'content', done:true },
+  { id:4, text:'Schedule Thursday collab post with brand tag', cat:'content', done:false },
+  { id:5, text:'Research next work-fit content angle', cat:'content', done:false },
+  { id:6, text:'Draft caption variations for best-performing Reel', cat:'content', done:false },
+  { id:7, text:'Follow up on Padel Up Club partnership terms', cat:'business', done:false },
+];
+
+let todos = JSON.parse(localStorage.getItem('dm-todos') || 'null') || DEFAULT_TODOS;
+let nextId = Math.max(...todos.map(t => t.id), 0) + 1;
+
+const CAT_CLASSES = { content:'cat-content', ops:'cat-ops', business:'cat-business', personal:'cat-personal' };
+const CAT_LABELS = { content:'Content', ops:'Ops', business:'Business', personal:'Personal' };
+
+function saveTodos() {
+  localStorage.setItem('dm-todos', JSON.stringify(todos));
+}
+
+function renderTodos() {
+  const pending = document.getElementById('todo-pending');
+  const done = document.getElementById('todo-done');
+  const doneLbl = document.getElementById('done-lbl');
+  if (!pending) return;
+
+  pending.innerHTML = '';
+  done.innerHTML = '';
+
+  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  todos.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'todo-item' + (t.done ? ' done' : '');
+    el.innerHTML = `
+      <div class="todo-check ${t.done ? 'checked' : ''}" onclick="toggleTodo(${t.id})">${t.done ? checkSvg : ''}</div>
+      <div class="todo-text">${t.text}</div>
+      <div class="todo-meta">
+        <span class="todo-cat ${CAT_CLASSES[t.cat] || 'cat-personal'}">${CAT_LABELS[t.cat] || t.cat}</span>
+        <button class="todo-del" onclick="deleteTodo(${t.id})">&#215;</button>
+      </div>`;
+    if (t.done) done.appendChild(el);
+    else pending.appendChild(el);
+  });
+
+  const hasDone = todos.some(t => t.done);
+  doneLbl.style.display = hasDone ? 'block' : 'none';
+}
+
+function addTodo() {
+  const input = document.getElementById('todo-input');
+  const cat = document.getElementById('todo-cat-select').value;
+  const text = input.value.trim();
+  if (!text) return;
+  todos.unshift({ id: nextId++, text, cat, done: false });
+  input.value = '';
+  saveTodos();
+  renderTodos();
+}
+
+function toggleTodo(id) {
+  const t = todos.find(t => t.id === id);
+  if (t) { t.done = !t.done; saveTodos(); renderTodos(); }
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  saveTodos();
+  renderTodos();
+}
+</script>
+</body>
+</html>
