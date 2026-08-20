@@ -9,21 +9,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --bg:        #080808;
-  --bg1:       #0F0F0F;
-  --bg2:       #141414;
-  --bg3:       #1A1A1A;
-  --border:    rgba(255,255,255,0.06);
-  --border2:   rgba(255,255,255,0.11);
-  --green:     #22C55E;
-  --green-dim: rgba(34,197,94,0.12);
-  --green-low: rgba(34,197,94,0.06);
+  --bg:        #0A0E1B;
+  --bg1:       #101830;
+  --bg2:       #172140;
+  --bg3:       #1E2B4E;
+  --border:    rgba(154,171,214,0.12);
+  --border2:   rgba(154,171,214,0.22);
+  --green:     #4C7DFF;
+  --green-dim: rgba(76,125,255,0.16);
+  --green-low: rgba(76,125,255,0.08);
   --white:     #FFFFFF;
-  --t1:        #F5F5F5;
-  --t2:        #888888;
-  --t3:        #444444;
-  --red:       #EF4444;
-  --yellow:    #EAB308;
+  --t1:        #F1F4FC;
+  --t2:        #9FACC9;
+  --t3:        #7986AC;
+  --red:       #F87171;
+  --yellow:    #FBBF24;
   --sidebar-w: 220px;
 }
 
@@ -45,9 +45,9 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .sb-top{padding:22px 18px 20px;border-bottom:1px solid var(--border)}
 .sb-ch-name{font-size:15px;font-weight:900;color:var(--white);letter-spacing:-.4px;line-height:1.1}
 .sb-ch-handle{font-size:11px;color:var(--t3);margin-top:3px;font-weight:500}
-.sb-followers{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid rgba(34,197,94,0.25);border-radius:6px;padding:5px 10px}
+.sb-followers{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid rgba(76,125,255,0.25);border-radius:6px;padding:5px 10px}
 .sb-followers-num{font-size:13px;font-weight:800;color:var(--green)}
-.sb-followers-lbl{font-size:10px;color:rgba(34,197,94,0.7);font-weight:600}
+.sb-followers-lbl{font-size:10px;color:rgba(76,125,255,0.7);font-weight:600}
 
 .sb-nav{padding:16px 10px;flex:1}
 .sb-section-lbl{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:14px}
@@ -60,7 +60,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
   margin-bottom:2px;transition:all .15s;user-select:none
 }
 .nav-item:hover{background:rgba(255,255,255,0.04);color:var(--t1)}
-.nav-item.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.nav-item.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(76,125,255,0.2)}
 .nav-item svg{flex-shrink:0}
 
 .sb-bottom{padding:16px 18px;border-top:1px solid var(--border)}
@@ -76,14 +76,14 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .main{margin-left:var(--sidebar-w);flex:1}
 
 .topbar{
-  height:54px;background:rgba(8,8,8,0.92);backdrop-filter:blur(12px);
+  height:54px;background:rgba(10,14,27,0.92);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 28px;position:sticky;top:0;z-index:100
 }
 .tb-left{display:flex;align-items:center;gap:10px}
 .tb-title{font-size:15px;font-weight:800;color:var(--t1)}
-.tb-badge{font-size:10px;font-weight:700;color:var(--green);background:var(--green-dim);border:1px solid rgba(34,197,94,.2);padding:3px 8px;border-radius:5px}
+.tb-badge{font-size:10px;font-weight:700;color:var(--green);background:var(--green-dim);border:1px solid rgba(76,125,255,.2);padding:3px 8px;border-radius:5px}
 .tb-right{font-size:11px;color:var(--t3)}
 
 /* ── VIEWS ── */
@@ -115,13 +115,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
   padding:18px;position:relative;overflow:hidden;transition:border-color .15s
 }
 .stat-card:hover{border-color:var(--border2)}
-.stat-card.featured{border-color:rgba(34,197,94,0.25);background:linear-gradient(145deg,var(--bg1),#0D160F)}
+.stat-card.featured{border-color:rgba(76,125,255,0.25);background:linear-gradient(145deg,var(--bg1),#0B1226)}
 .stat-label{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.4px;margin-bottom:10px;text-transform:uppercase}
 .stat-value{font-size:30px;font-weight:900;letter-spacing:-1.5px;color:var(--white);line-height:1;margin-bottom:4px}
 .stat-value.green{color:var(--green)}
 .stat-sub{font-size:10px;color:var(--t3)}
 .stat-delta{position:absolute;top:18px;right:16px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
-.delta-up{background:rgba(34,197,94,.12);color:var(--green)}
+.delta-up{background:rgba(76,125,255,.12);color:var(--green)}
 .delta-down{background:rgba(239,68,68,.1);color:var(--red)}
 .delta-mid{background:rgba(234,179,8,.1);color:var(--yellow)}
 .stat-bar{height:2px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden;margin-top:10px}
@@ -143,24 +143,24 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .plat-num-val{font-size:14px;font-weight:800;color:var(--t1)}
 .plat-num-lbl{font-size:9px;color:var(--t3)}
 .pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.pill-green{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.pill-green{background:rgba(76,125,255,.1);color:var(--green);border:1px solid rgba(76,125,255,.2)}
 .pill-red{background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.18)}
 .pill-yellow{background:rgba(234,179,8,.08);color:var(--yellow);border:1px solid rgba(234,179,8,.18)}
 .pill-gray{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--border)}
 
 /* ── CONTENT CALENDAR ── */
 .cal-section-title{font-size:9px;font-weight:700;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.cal-section-title::after{content:'';flex:1;height:1px;background:rgba(34,197,94,0.2)}
+.cal-section-title::after{content:'';flex:1;height:1px;background:rgba(76,125,255,0.2)}
 .cal-body{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:20px}
 .cal-controls{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .cal-ctrl-left .cal-title{font-size:15px;font-weight:800;color:var(--white)}
 .cal-ctrl-left .cal-sub{font-size:10px;color:var(--t3);margin-top:4px}
 .cal-ctrl-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .cal-filter{font-size:10px;font-weight:600;padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--t2);cursor:pointer;transition:all .15s}
-.cal-filter:hover{border-color:rgba(34,197,94,.4);color:var(--green)}
-.cal-filter.active{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);color:var(--green)}
-.cal-add{font-size:10px;font-weight:700;padding:5px 13px;border-radius:7px;border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.12);color:var(--green);cursor:pointer;transition:all .15s;margin-left:4px}
-.cal-add:hover{background:rgba(34,197,94,.22)}
+.cal-filter:hover{border-color:rgba(76,125,255,.4);color:var(--green)}
+.cal-filter.active{background:rgba(76,125,255,.12);border-color:rgba(76,125,255,.4);color:var(--green)}
+.cal-add{font-size:10px;font-weight:700;padding:5px 13px;border-radius:7px;border:1px solid rgba(76,125,255,.4);background:rgba(76,125,255,.12);color:var(--green);cursor:pointer;transition:all .15s;margin-left:4px}
+.cal-add:hover{background:rgba(76,125,255,.22)}
 .cal-week-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .cal-week-lbl{font-size:11px;color:var(--t3);font-weight:500}
 .cal-week-nav{display:flex;gap:5px}
@@ -168,7 +168,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .cal-nav-btn:hover{border-color:var(--border2);color:var(--t1)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
 .cal-col{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:10px;padding:10px 7px;display:flex;flex-direction:column}
-.cal-col.today{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.025)}
+.cal-col.today{border-color:rgba(76,125,255,.3);background:rgba(76,125,255,.025)}
 .cal-day-hd{font-size:8.5px;font-weight:700;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .cal-day-hd .day-num{display:block;font-size:16px;font-weight:800;color:var(--t2);letter-spacing:normal;margin-top:2px}
 .cal-day-hd.today{color:var(--green)}
@@ -187,14 +187,14 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
   padding:11px 14px;font-size:13px;color:var(--t1);font-family:'Inter',sans-serif;
   transition:border-color .15s;outline:none
 }
-.todo-input:focus{border-color:rgba(34,197,94,.4)}
+.todo-input:focus{border-color:rgba(76,125,255,.4)}
 .todo-input::placeholder{color:var(--t3)}
 .todo-add-btn{
   padding:11px 18px;background:var(--green);border:none;border-radius:9px;
-  font-size:12px;font-weight:700;color:#000;cursor:pointer;transition:all .15s;
+  font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:all .15s;
   white-space:nowrap;font-family:'Inter',sans-serif
 }
-.todo-add-btn:hover{background:#1DAF52}
+.todo-add-btn:hover{background:#3A66E0}
 
 .todo-section-lbl{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
 .todo-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
@@ -216,7 +216,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .todo-meta{display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0}
 .todo-cat{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px}
 .cat-content{background:rgba(105,201,208,.1);color:#69C9D0}
-.cat-ops{background:rgba(34,197,94,.1);color:var(--green)}
+.cat-ops{background:rgba(76,125,255,.1);color:var(--green)}
 .cat-business{background:rgba(234,179,8,.1);color:var(--yellow)}
 .cat-personal{background:rgba(255,255,255,.05);color:var(--t3)}
 .todo-del{width:22px;height:22px;border-radius:5px;background:transparent;border:none;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;font-family:'Inter',sans-serif}
@@ -238,13 +238,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 .modal-field{margin-bottom:12px}
 .modal-lbl{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px}
 .modal-in{width:100%;background:var(--bg1);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--t1);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
-.modal-in:focus{border-color:rgba(34,197,94,.4)}
+.modal-in:focus{border-color:rgba(76,125,255,.4)}
 .modal-in textarea{resize:vertical;min-height:70px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 .btn-ghost{padding:8px 15px;border-radius:7px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
 .btn-ghost:hover{color:var(--t1);border-color:var(--border2)}
-.btn-green{padding:8px 15px;border-radius:7px;background:var(--green);border:none;color:#000;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.btn-green:hover{background:#1DAF52}
+.btn-green{padding:8px 15px;border-radius:7px;background:var(--green);border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-green:hover{background:#3A66E0}
 
 /* ── PROGRESS ── */
 .prog{margin-bottom:12px}
@@ -257,13 +257,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
 /* ── CREDIT BANNER ── */
 .credit{
   padding:10px 28px;
-  background:rgba(34,197,94,.04);border-bottom:1px solid rgba(34,197,94,.1);
+  background:rgba(76,125,255,.04);border-bottom:1px solid rgba(76,125,255,.1);
   display:flex;align-items:center;gap:14px;flex-wrap:wrap
 }
-.credit-avatar{width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#000;flex-shrink:0}
+.credit-avatar{width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0}
 .credit-name{font-size:11px;font-weight:700;color:var(--t1)}
 .credit-txt{font-size:10px;color:var(--t3);flex:1;min-width:200px}
-.credit-tag{font-size:9px;padding:3px 9px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap;flex-shrink:0}
+.credit-tag{font-size:9px;padding:3px 9px;background:rgba(76,125,255,.1);border:1px solid rgba(76,125,255,.2);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -422,10 +422,10 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
             <div style="font-size:11px;font-weight:700;color:#EAB308;margin-bottom:3px">Out &amp; About</div>
             <div style="font-size:10px;color:var(--t2)">Interviews, tournaments, brand events, community meetups</div>
           </div>
-          <div style="padding:10px 12px;background:var(--bg2);border:1px solid rgba(34,197,94,.3);border-radius:8px">
+          <div style="padding:10px 12px;background:var(--bg2);border:1px solid rgba(76,125,255,.3);border-radius:8px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
               <div style="font-size:11px;font-weight:700;color:#A78BFA">Lifestyle</div>
-              <span style="font-size:8px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)">Most frequent</span>
+              <span style="font-size:8px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(76,125,255,.12);color:var(--green);border:1px solid rgba(76,125,255,.2)">Most frequent</span>
             </div>
             <div style="font-size:10px;color:var(--t2)">Day-in-the-life, workouts, off-court moments — the daily anchor</div>
           </div>
@@ -434,7 +434,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
     </div>
 
     <!-- Weekly Activity Tracker -->
-    <div class="sh"><div class="sh-lbl">Weekly activity tracker</div><div class="sh-line"></div><div id="tracker-week-lbl" style="font-size:10px;color:var(--t3);white-space:nowrap;margin-left:8px"></div><div style="margin-left:10px;font-size:9px;padding:3px 9px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap">Resets every Sunday</div></div>
+    <div class="sh"><div class="sh-lbl">Weekly activity tracker</div><div class="sh-line"></div><div id="tracker-week-lbl" style="font-size:10px;color:var(--t3);white-space:nowrap;margin-left:8px"></div><div style="margin-left:10px;font-size:9px;padding:3px 9px;background:rgba(76,125,255,.08);border:1px solid rgba(76,125,255,.18);border-radius:5px;color:var(--green);font-weight:700;white-space:nowrap">Resets every Sunday</div></div>
     <div class="card" style="padding:16px 18px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div><div class="card-title">Tasks This Week</div><div class="card-sub">Add or remove tasks anytime — checkmarks reset automatically each Sunday</div></div>
@@ -524,7 +524,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);mi
   <!-- ═══ CONTENT LOG ═══ -->
   <div class="view" id="view-log">
 
-    <div style="margin-bottom:14px;padding:12px 16px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15);border-radius:9px;font-size:10px;color:var(--t2);line-height:1.6">
+    <div style="margin-bottom:14px;padding:12px 16px;background:rgba(76,125,255,.05);border:1px solid rgba(76,125,255,.15);border-radius:9px;font-size:10px;color:var(--t2);line-height:1.6">
       Internal tracking — log every Reel and Carousel after you post it, with the numbers from Instagram insights. No projections, just what actually happened. The charts below update as you add entries.
     </div>
 
@@ -735,7 +735,7 @@ function renderTracker() {
   const fmt = d2 => d2.toLocaleString('en-US', { month: 'short', day: 'numeric' });
   if (weekLbl) weekLbl.textContent = `${fmt(mon)} – ${fmt(sun)}`;
 
-  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
 
   list.innerHTML = '';
   trackerTasks.forEach(task => {
@@ -878,7 +878,7 @@ function initLogCharts() {
     type: 'bar',
     data: {
       labels: [],
-      datasets: [{ label: 'Engagement', data: [], backgroundColor: 'rgba(34,197,94,0.45)', borderRadius: 3 }]
+      datasets: [{ label: 'Engagement', data: [], backgroundColor: 'rgba(76,125,255,0.45)', borderRadius: 3 }]
     },
     options: { ...chartOpts(), plugins: { legend: { display: false } } }
   });
@@ -1038,7 +1038,7 @@ function renderTodos() {
   pending.innerHTML = '';
   done.innerHTML = '';
 
-  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const checkSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
 
   todos.forEach(t => {
     const el = document.createElement('div');
